@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProjektLista.Pages.StronaGlowna"
+             Title="StronaGlowna"
+             BackgroundColor="LightGray">
+    <StackLayout>
+        <Label Text="Wyszukiwarka Airbnb" FontSize="36" BackgroundColor="LightGray" Padding="10" TextColor="#2B0B98" HorizontalTextAlignment="Center"/>
+        <Entry x:Name="Search" TextChanged="TextZostalZmieniony" FontSize="20" Placeholder="Wyszukaj" BackgroundColor="LightGray" Margin="0,0,0,10" PlaceholderColor="black"/>
+        <Button Text="Filtry" Clicked="ZmianaFiltrow" BackgroundColor="#2B0B98" TextColor="white" HorizontalOptions="Center" Margin="0,10,0,10" WidthRequest="150" FontSize="20"/>
+        <Frame Margin="20" x:Name="MenuFiltrow" IsVisible="false" BorderColor="black" BackgroundColor="LightGray">
+            <StackLayout>
+                <CheckBox x:Name="CzyFiltAktywny"/>
+                <Entry x:Name="FiltrKraj" Placeholder="Kraj" PlaceholderColor="Black"/>
+                <Entry x:Name="FiltrCena" Placeholder="Maksymalna cena" PlaceholderColor="Black"/>
+                <Entry x:Name="FiltrOcena" Placeholder="Minimalna ocena" PlaceholderColor="Black"/>
+            </StackLayout>
+        </Frame>
+        
+        
+        <ListView IsPullToRefreshEnabled="true"  x:Name="ListaObecnychWyszukiwan" ItemSelected="ZaznaczonoElement" HasUnevenRows="true">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Orientation="Horizontal" BackgroundColor="white">
+                            <StackLayout Orientation="Vertical" Margin="5">
+                                <Label Text="{Binding name}" LineBreakMode="WordWrap" FontSize="16"/>
+                                <Label Text="{Binding street}" LineBreakMode="WordWrap" FontSize="12"/>
+                            </StackLayout>
+                        </StackLayout>
+                        
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+    </StackLayout>
+</ContentPage>

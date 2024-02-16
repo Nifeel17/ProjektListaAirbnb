@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace ProjektLista.Classes
 {
-    /*public class SearchGroup : List<Search>
+    public class SearchGroup : List<Search>
     {
-
-    }*/
+        public string Name { get; set; }
+        public string ShortName { get; set; }
+    }
 }

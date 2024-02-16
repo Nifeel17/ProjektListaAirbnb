@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ProjektLista.Classes
 {
-    internal class Search
+    public class Search
     {
         public int id { get; set; }
         public string name { get; set; }

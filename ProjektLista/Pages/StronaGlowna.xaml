@@ -5,34 +5,31 @@
              Title="StronaGlowna"
              BackgroundColor="LightGray">
     <StackLayout>
-        <Label Text="Wyszukiwarka Airbnb" FontSize="36" BackgroundColor="LightGray" Padding="10" TextColor="#2B0B98" HorizontalTextAlignment="Center"/>
-        <Entry x:Name="Search" TextChanged="TextZostalZmieniony" FontSize="20" Placeholder="Wyszukaj" BackgroundColor="LightGray" Margin="0,0,0,10" PlaceholderColor="black"/>
+        <Label Text="Wyszukiwarka Airbnb" FontSize="36" BackgroundColor="LightGray" Padding="10" Margin="0,45,0,10" TextColor="#2B0B98" HorizontalTextAlignment="Center"/>
+        <Label x:Name="tymczasowy"/>
+        <Entry x:Name="Search" Text="" TextChanged="TextZostalZmieniony" FontSize="20" Placeholder="Wyszukaj" BackgroundColor="LightGray" Margin="0,0,0,10" PlaceholderColor="black"/>
         <Button Text="Filtry" Clicked="ZmianaFiltrow" BackgroundColor="#2B0B98" TextColor="white" HorizontalOptions="Center" Margin="0,10,0,10" WidthRequest="150" FontSize="20"/>
         <Frame Margin="20" x:Name="MenuFiltrow" IsVisible="false" BorderColor="black" BackgroundColor="LightGray">
             <StackLayout>
-                <CheckBox x:Name="CzyFiltAktywny"/>
-                <Entry x:Name="FiltrKraj" Placeholder="Kraj" PlaceholderColor="Black"/>
-                <Entry x:Name="FiltrCena" Placeholder="Maksymalna cena" PlaceholderColor="Black"/>
-                <Entry x:Name="FiltrOcena" Placeholder="Minimalna ocena" PlaceholderColor="Black"/>
+                <CheckBox x:Name="CzyFiltrAktywny" CheckedChanged="CheckboxKlikniety"/>
+                <Entry x:Name="FiltrKraj" TextChanged="TextZostalZmieniony" Placeholder="Kraj" PlaceholderColor="Black"/>
+                <Entry x:Name="FiltrCena" TextChanged="TextZostalZmieniony" Placeholder="Maksymalna cena" PlaceholderColor="Black"/>
+                <Entry x:Name="FiltrOcena" TextChanged="TextZostalZmieniony" Placeholder="Minimalna ocena" PlaceholderColor="Black"/>
             </StackLayout>
         </Frame>
-        
-        
-        <ListView IsPullToRefreshEnabled="true"  x:Name="ListaObecnychWyszukiwan" ItemSelected="ZaznaczonoElement" HasUnevenRows="true">
+        <Label x:Name="labelPoprzednieWyszukwania" Text="Poprzednie wyszukiwania:"/>
+
+        <ListView  x:Name="ListaObecnychWyszukiwan">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <ViewCell>
-                        <StackLayout Orientation="Horizontal" BackgroundColor="white">
-                            <StackLayout Orientation="Vertical" Margin="5">
-                                <Label Text="{Binding name}" LineBreakMode="WordWrap" FontSize="16"/>
-                                <Label Text="{Binding street}" LineBreakMode="WordWrap" FontSize="12"/>
-                            </StackLayout>
-                        </StackLayout>
-                        
-                    </ViewCell>
+                    <TextCell Text="{Binding name}" Detail="{Binding smart_location}">
+                        <TextCell.ContextActions>
+                            <MenuItem Text="Szczegóły" CommandParameter="{Binding .}" Clicked="ZobaczSzczegoly"/>
+                            <MenuItem Text="Usun" CommandParameter="{Binding .}" Clicked="ZmienStan"/>
+                        </TextCell.ContextActions>
+                    </TextCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-
     </StackLayout>
 </ContentPage>

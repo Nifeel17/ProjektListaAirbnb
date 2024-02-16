@@ -1,4 +1,6 @@
 using System.Linq;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Layouts;
 using Newtonsoft.Json;
 using ProjektLista.Classes;
 
@@ -34,28 +36,72 @@ public partial class StronaGlowna : ContentPage
     {
         if (Search.Text == "")
         {
+            labelPoprzednieWyszukwania.IsVisible = true;
             ListaObecnychWyszukiwan.ItemsSource= Zapisane;
-            return;
-        }
-
-        IEnumerable<Search> lista = Dane.Where(search => search.name.ToLower().StartsWith(Search.Text.ToLower()));
-        ListaObecnychWyszukiwan.ItemsSource = lista;
-    }
-
-    public async void ZaznaczonoElement(object sender, SelectedItemChangedEventArgs e)
-    {
-        var z = e.SelectedItem as Search;
-        if (Zapisane.Contains(z))
-        {
-            Zapisane.Remove(z);
-            ListaObecnychWyszukiwan.ItemsSource=new List<Search>();
-            ListaObecnychWyszukiwan.ItemsSource = Zapisane;
         }
         else
         {
-            Zapisane.Add(z);
+            labelPoprzednieWyszukwania.IsVisible = false;
+            List<Search> lista = Dane.Where(search => search.name.ToLower().StartsWith(Search.Text.ToLower())).ToList();
+             if (CzyFiltrAktywny.IsChecked == true)
+             {
+                 var FiltrowanaLista = new List<Search>();
+                if (FiltrKraj.Text != null)
+                {
+                    //dodac ;label sprawdzajacy
+                    var listTymczasowa = new List<Search>();
+                    foreach(var x in lista)
+                    {
+                        int k = 0;
+                        bool czydodac = true;
+                        var kraj = x.country.ToLower();
+                        var filtrkrajowy = FiltrKraj.Text.ToLower();
+                        while (k < kraj.Count() && k<filtrkrajowy.Count())
+                        {
+                            if (kraj[k] == filtrkrajowy[k])
+                            {
+                                k++;
+                            }
+                            else
+                            {
+                                czydodac=false;
+                                break;
+                            }
+                        }
+                        if (czydodac == true)
+                        {
+                            listTymczasowa.Add(x);
+                        }
+                    }
+                    FiltrowanaLista = listTymczasowa;
+                }
+
+                if (FiltrCena.Text != null)
+                {
+                    int maksCena;
+                    if (int.TryParse(FiltrCena.Text, out maksCena))
+                    {
+                        FiltrowanaLista = lista.Where(search => search.price <= maksCena).ToList();
+                    }
+                }
+
+                if (FiltrOcena.Text !=null)
+                {
+                    int minOcena;
+                    if(int.TryParse(FiltrOcena.Text, out minOcena)){
+
+                        FiltrowanaLista = FiltrowanaLista.Where(search => search.review_scores_rating >= minOcena).ToList();
+                    }
+                }
+                 ListaObecnychWyszukiwan.ItemsSource = FiltrowanaLista;
+             }
+             else
+             {
+
+            ListaObecnychWyszukiwan.ItemsSource = lista;
+            }
         }
-        await DisplayAlert($"{z.name}",$"Lokalizacja: {z.country_code}, {z.street}\n\nOcena:{z.review_scores_rating}\n\nCena:{z.price}\n","Ok");
+        
     }
 
     private void ZmianaFiltrow(object sender, EventArgs e)
@@ -68,5 +114,36 @@ public partial class StronaGlowna : ContentPage
         {
             MenuFiltrow.IsVisible = true;
         }
-    }//gdy pokazuje te zapisane to jest filt a b c d, a jak wyszukuje to nie. zmiana filtor - wlacza i wylacza menu filtrow (filtr kraju, oceny, ceny)
+    }//zmiana filtor - wlacza i wylacza menu filtrow (filtr kraju, oceny, ceny)
+
+    private void ZobaczSzczegoly(object sender, EventArgs e)
+    {
+        var z = sender as MenuItem;
+        if (z != null && z.CommandParameter is Search item)
+        {
+            DisplayAlert($"{item.name}", $"Kraj: {item.country}\nLokalizacja: {item.smart_location}\nCena: {item.price}\nSrednia ocena: {item.review_scores_rating}\nIloœæ sypialni: {item.bedrooms}","OK");
+            if (!Zapisane.Contains(item))
+            {
+                Zapisane.Add(item);
+            }
+        }
+    }
+    private void ZmienStan(object sender, EventArgs e)
+    {
+        var z = sender as MenuItem;
+        if (z != null && z.CommandParameter is Search item)
+        {
+            if (ListaObecnychWyszukiwan.ItemsSource == Zapisane)
+            {
+                Zapisane.Remove(item);
+                ListaObecnychWyszukiwan.ItemsSource = new List<Search>();
+                ListaObecnychWyszukiwan.ItemsSource = Zapisane;
+            }
+        }
+    }
+
+    private void CheckboxKlikniety(object sender, CheckedChangedEventArgs e)
+    {
+        TextZostalZmieniony(new object(), new TextChangedEventArgs("",""));
+    }
 }

@@ -34,7 +34,7 @@ public partial class StronaGlowna : ContentPage
 
     private async void TextZostalZmieniony(object sender, TextChangedEventArgs e)
     {
-        if (Search.Text == "")
+        if (Search.Text == "" && CzyFiltrAktywny.IsChecked==false)
         {
             labelPoprzednieWyszukwania.IsVisible = true;
             ListaObecnychWyszukiwan.ItemsSource= Zapisane;
@@ -114,7 +114,7 @@ public partial class StronaGlowna : ContentPage
         {
             MenuFiltrow.IsVisible = true;
         }
-    }//zmiana filtor - wlacza i wylacza menu filtrow (filtr kraju, oceny, ceny)
+    }
 
     private void ZobaczSzczegoly(object sender, EventArgs e)
     {
